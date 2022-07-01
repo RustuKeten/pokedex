@@ -1,38 +1,42 @@
-import { useEffect } from "react";
-import { useState } from "react";
+// import { useEffect } from "react";
+// import { useState } from "react";
 import axios from "axios";
-import PokemonList from "./PokemonList";
+import { useEffect, useState } from "react";
+import PokemonList from "../pokemonList/PokemonList";
 
 const PokemonCard = () => {
-  const [pokemon, setPokemon] = useState([]);
-  const [PokemonName, setPokemonName] = useState("");
+  const [pokemon, setPokemon] = useState("");
+  const [pokemonName, setPokemonName] = useState("");
+
   useEffect(() => {
     axios
-      .get("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1154")
+      .get("https://pokeapi.co/api/v2/pokemon/?offset=10&limit=20")
       .then((response) => setPokemon(response.data.results))
-      .catch((error) => console.log({ error }));
-  }, [PokemonName]);
+      .catch((err) => console.log(err));
+  }, [pokemonName]);
 
-  const filterCard = (e) => {
+  const handleChange = (e) => {
     setPokemonName(e.target.value);
   };
+
+  console.log(pokemonName);
   return (
-    <div className="container-son">
+    <div className="page">
       <div>
         <div className="header">
           {" "}
           <label htmlFor="header">POKEMON</label>
         </div>
-        <input type="text" id="header" onChange={filterCard} />
+        <input type="text" id="header" onChange={handleChange} />
       </div>
       <div className="container-card">
-        {!PokemonName
-          ? pokemon.map((poki) => {
-              return <PokemonList {...poki} />;
+        {!pokemonName
+          ? pokemon.map((poke) => {
+              return <PokemonList {...poke} />;
             })
-          : pokemon.map((poki) => {
+          : pokemon.map((poke) => {
               return (
-                poki.name.includes(PokemonName) && <PokemonList {...poki} />
+                poke.name.includes(pokemonName) && <PokemonList {...poke} />
               );
             })}
       </div>
